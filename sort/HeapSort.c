@@ -6,6 +6,7 @@
  * @date 2016-04-14
  */
 
+#include <stdio.h>
 #include "Sort.h"
 
 #define NO_EXCHANGE    0
@@ -133,7 +134,7 @@ static void heapify(DATA_TYPE array[], int array_size)
     /**
      * iterate all the non-leaf node
      */ 
-    for (root; root >= 0; root--){
+    for (; root >= 0; root--){
 	left = 2*root + 1;
 	right = 2*root + 2;
 
@@ -191,9 +192,10 @@ int heap_sort(DATA_TYPE array[], int array_size)
 
     /**
      * iterate the array, put the biggest in the rear
+     * index means the current array's size
      */ 
     int index = array_size - 1;
-    for (index; index > 0; index--){
+    for (; index > 2; index--){
 	DATA_TYPE temp = array[index];
 	array[index] = array[0];
 	array[0] = temp;
@@ -203,13 +205,22 @@ int heap_sort(DATA_TYPE array[], int array_size)
 	    case NO_EXCHANGE:
 		continue;
 	    case LEFT_EXCHANGE:
-		heap_down(array, 1, array_size);
+		heap_down(array, 1, index);
 		break;
 	    case RIGHT_EXCHANGE:
-		heap_down(array, 2, array_size);
+		heap_down(array, 2, index);
 		break;
 	}
     }
+
+    DATA_TYPE temp = array[0];
+    if (array[1] > array[2]){
+	array[0] = array[2];
+    } else {
+	array[0] = array[1];
+	array[1] = array[2];
+    }
+    array[2] = temp;
 
     return 0;
 }
