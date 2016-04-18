@@ -6,7 +6,6 @@
  * @date 2016-04-14
  */
 
-#include <stdio.h>
 #include "Sort.h"
 
 #define NO_EXCHANGE    0
@@ -213,6 +212,9 @@ int heap_sort(DATA_TYPE array[], int array_size)
 	}
     }
 
+    /**
+     * handle the last three elements
+     */ 
     DATA_TYPE temp = array[0];
     if (array[1] > array[2]){
 	array[0] = array[2];
