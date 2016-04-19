@@ -24,7 +24,7 @@ static int partition(DATA_TYPE array[], int low, int high)
 {
     DATA_TYPE pivot = array[low];
     int i = low;
-    int j = high;
+    int j = high - 1;
 
     while (1){
 	/**
@@ -40,8 +40,9 @@ static int partition(DATA_TYPE array[], int low, int high)
 	 *         j 
 	 * so return i;
 	 */ 
-	while (array[j] > pivot)
-	    j--;
+	do {
+	    --j;
+	}while (array[j] > pivot);
 	if (i >= j){
 	    array[i] = pivot;
 	    return i;
@@ -49,7 +50,7 @@ static int partition(DATA_TYPE array[], int low, int high)
 	array[i] = array[j];
 
 	/**
-	 * j is remained; i goes ahead.
+	 * j is remained; i takes backward.
 	 * when exit the top while loop;
 	 * there are two situations:
 	 * 1. i = j
@@ -61,15 +62,14 @@ static int partition(DATA_TYPE array[], int low, int high)
 	 *         i 
 	 * so return j;
 	 */ 
-	i++;
-	while (array[i] < pivot)
-	    i++;
+	do {
+	    ++i;
+	}while (array[i] < pivot);
 	if (i >= j){
 	    array[j] = pivot;
 	    return j;
 	}
 	array[j] = array[i];
-	j--;
     }
 }
 
