@@ -23,9 +23,13 @@ OBJS:=$(patsubst %.c,%.o,$(SRC))
 
 #######################user's define start##############################
 
-all:$(OBJS)
-	$(CC) $(CFLAGS) -o sort_test $^
+all:HeapSort QuickSort
 
+HeapSort:HeapSort.o test_heap.o GetArray.o
+	$(CC) $(CFLAGS) -o heap_test $^
+
+QuickSort:QuickSort.o test_quick.o GetArray.o
+	$(CC) $(CFLAGS) -o quick_test $^
 
 #######################user's define end################################
 

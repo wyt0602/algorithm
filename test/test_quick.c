@@ -10,34 +10,32 @@
 #include "Sort.h"
 #include "GetArray.h"
 
-#define ARRAY_SIZE 10000
+#define ARRAY_SIZE 1000000
 #define RAND_FILE "rand.txt"
-#define RAND_SHOW "rand_show.txt"
 #define RESULT_FILE "result.txt"
 
 int main()
 {
 
-    /*int array[10] = {2, 4, 6, 12, 23, \
-	21, 11, 5, 89, 32
+    /*int array[10] = {2, 2, 2, 2, 2, \
+	21, 22, 42, 23, 12
     };
 
-    heap_sort(array, 10);
+    quick_sort(array, 10);
 
     int i;
     for (i = 0; i < 10; i++)
 	printf("%d\n", array[i]);*/
 
     
-    FILE* f_rand = fopen(RAND_FILE, "a+");
-    FILE* f_rand_show = fopen(RAND_SHOW, "a+");
+    FILE* f_rand_show = fopen(RAND_FILE, "a+");
     FILE* f_result = fopen(RESULT_FILE, "a+");
-    if (!(f_rand && f_result && f_rand_show)){
+    if (!(f_result && f_rand_show)){
 	printf("fopen error!");
 	return -1;
     }
 
-    printf("fp is all right!\n");
+    printf("fps are all right!\n");
     int array[ARRAY_SIZE] = {};
 
     int ret = 0;
@@ -47,42 +45,23 @@ int main()
 
     printf("get array is all right!\n");
     int i;
-    for(i = 0; i < ARRAY_SIZE; i++){
-	fwrite(&array[i], 4, 1, f_rand);
-    }
-    fclose(f_rand);
 
-    printf("write in binary is ok!\n");
     for(i = 0; i < ARRAY_SIZE; i++){
-	fprintf(f_rand_show, "%8d  ", array[i]);
-	if ((i != 0) && ((i%5) == 0))
+	if ((i%5 == 0) && (i != 0))
 	    fprintf(f_rand_show, "\n");
+	fprintf(f_rand_show, "%8d  ", array[i]);
     }
     fclose(f_rand_show);
 
-    printf("write in char is ok\n");
-    heap_sort(array, ARRAY_SIZE);
+    quick_sort(array, ARRAY_SIZE);
 
     for(i = 0; i < ARRAY_SIZE; i++){
-	fprintf(f_result, "%8d  ", array[i]);
-	if ((i != 0) && ((i%5) == 0))
+	if ((i%5 == 0) && (i != 0))
 	    fprintf(f_result, "\n");
+	fprintf(f_result, "%8d  ", array[i]);
     }
     fclose(f_result);
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

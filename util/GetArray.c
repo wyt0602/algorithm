@@ -6,12 +6,6 @@
  * @date 2016-04-14
  */
 #include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 #include "Log.h"
 #include "GetArray.h"
@@ -27,17 +21,10 @@ int get_array(int array[], int array_size)
 	return -1;
     }
 
-    /*int fd = open("/dev/urandom", O_RDONLY);
-    if (fd == -1){
-	ERROR("open /dev/urandon error!");
-	return -1;
-    }*/
-
     int count = 0;
 
     while (count < array_size){
 	unsigned int temp;
-	//read(fd, &temp, 4);
 	temp = rand() % array_size;
 
 	if (flag[temp])
@@ -49,31 +36,8 @@ int get_array(int array[], int array_size)
 	}
     }
 
-    //close(fd);
-
     free(flag);
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
