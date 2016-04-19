@@ -20,7 +20,7 @@
  * @Returns   The pivot's index
  */
 /* ----------------------------------------------------------------------------*/
-static int partition(DATA_TYPE array[], int low, int high)
+static int partition_ver(DATA_TYPE array[], int low, int high)
 {
     DATA_TYPE pivot = array[low];
     int i = low;
@@ -73,6 +73,29 @@ static int partition(DATA_TYPE array[], int low, int high)
     }
 }
 
+static int partition(DATA_TYPE array[], int low, int high)
+{
+    DATA_TYPE pivot = array[low];
+    int i = low - 1;
+    int j = high + 1;
+
+    while (1){
+	do {
+	    ++i;
+	} while(array[i] < pivot);
+
+	do {
+	    --j;
+	} while(array[j] > pivot);
+
+	if (i >= j)
+	    return j;
+
+	DATA_TYPE temp = array[i];
+	array[i] = array[j];
+	array[j] = temp;
+    }
+}
 
 /* --------------------------------------------------------------------------*/
 /**
@@ -83,11 +106,21 @@ static int partition(DATA_TYPE array[], int low, int high)
  * @Param high The end address
  */
 /* ----------------------------------------------------------------------------*/
+static void quick_recursion_ver(DATA_TYPE array[], int low, int high)
+{
+    if (low < high){
+	int middle = partition_ver(array, low, high);
+	quick_recursion_ver(array, low, middle-1);
+	quick_recursion_ver(array, middle+1, high);
+    }
+}
+
+
 static void quick_recursion(DATA_TYPE array[], int low, int high)
 {
     if (low < high){
 	int middle = partition(array, low, high);
-	quick_recursion(array, low, middle-1);
+	quick_recursion(array, low, middle);
 	quick_recursion(array, middle+1, high);
     }
 }
@@ -108,7 +141,7 @@ int quick_sort(DATA_TYPE array[], int array_size)
     if (array == 0)
 	return -1;
 
-    quick_recursion(array, 0, array_size-1);
+    quick_recursion_ver(array, 0, array_size-1);
 
     return 0;
 }

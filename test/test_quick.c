@@ -17,17 +17,24 @@
 int main()
 {
 
-    /*int array[10] = {2, 2, 2, 2, 2, \
-	21, 22, 42, 23, 12
+    /*
+    int array[10] = {2, 2, 2, 2, 2, \
+	2, 2, 2, 2, 2
     };
 
     quick_sort(array, 10);
 
     int i;
     for (i = 0; i < 10; i++)
-	printf("%d\n", array[i]);*/
+	printf("%d\n", array[i]);
+    */
 
-    
+    /*
+    int array[ARRAY_SIZE] = {};
+    get_array(array, ARRAY_SIZE);
+    quick_sort(array, ARRAY_SIZE);
+    */
+
     FILE* f_rand_show = fopen(RAND_FILE, "a+");
     FILE* f_result = fopen(RESULT_FILE, "a+");
     if (!(f_result && f_rand_show)){
