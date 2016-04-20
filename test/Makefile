@@ -43,7 +43,7 @@ GenDependency:$(SRC)
 #clean the current directory
 .PHONY:clean
 clean:
-	-rm *.o *_test *.txt
+	-rm *.o *_test *.txt core *.out
 	make GenDependency -f $(MAKEFILENAME)
 
 #package the source

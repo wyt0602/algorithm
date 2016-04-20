@@ -24,7 +24,7 @@ static int partition_ver(DATA_TYPE array[], int low, int high)
 {
     DATA_TYPE pivot = array[low];
     int i = low;
-    int j = high - 1;
+    int j = high + 1;
 
     while (1){
 	/**
@@ -75,7 +75,8 @@ static int partition_ver(DATA_TYPE array[], int low, int high)
 
 static int partition(DATA_TYPE array[], int low, int high)
 {
-    DATA_TYPE pivot = array[low];
+    int index = (high - low - (high-low)%2) / 2 + low;
+    DATA_TYPE pivot = array[index];
     int i = low - 1;
     int j = high + 1;
 
@@ -141,7 +142,7 @@ int quick_sort(DATA_TYPE array[], int array_size)
     if (array == 0)
 	return -1;
 
-    quick_recursion_ver(array, 0, array_size-1);
+    quick_recursion(array, 0, array_size-1);
 
     return 0;
 }

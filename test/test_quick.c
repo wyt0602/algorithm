@@ -18,23 +18,27 @@ int main()
 {
 
     /*
-    int array[10] = {2, 2, 2, 2, 2, \
-	2, 2, 2, 2, 2
+    int array[2] = {3, 2
     };
 
-    quick_sort(array, 10);
+    quick_sort(array, 2);
 
     int i;
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < 2; i++)
 	printf("%d\n", array[i]);
     */
 
-    /*
     int array[ARRAY_SIZE] = {};
-    get_array(array, ARRAY_SIZE);
+    //get_array(array, ARRAY_SIZE);
+    int count = 1230;
+    get_array(array, 1230);
+    while (count < ARRAY_SIZE){
+	array[count] = count;
+	count++;
+    }
     quick_sort(array, ARRAY_SIZE);
-    */
 
+    /*
     FILE* f_rand_show = fopen(RAND_FILE, "a+");
     FILE* f_result = fopen(RESULT_FILE, "a+");
     if (!(f_result && f_rand_show)){
@@ -68,6 +72,8 @@ int main()
 	fprintf(f_result, "%8d  ", array[i]);
     }
     fclose(f_result);
+
+    */
 
     return 0;
 }
