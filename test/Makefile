@@ -13,7 +13,7 @@ LIB_SUFFIX=
 #parameter for gcc
 CC=gcc
 DEBUG=-pg -g
-CFLAGS+=-Wall $(GCCINC)
+CFLAGS+=-Wall $(GCCINC) -g
 DNAYMIC=-Wl,-rpath=
 STATIC=-static
 
@@ -30,6 +30,9 @@ HeapSort:HeapSort.o test_heap.o GetArray.o
 
 QuickSort:QuickSort.o test_quick.o GetArray.o
 	$(CC) $(CFLAGS) -o quick_test $^
+
+MergeSort:MergeSort.o test_merge.o GetArray.o
+	$(CC) $(CFLAGS) -o merge_test $^
 
 #######################user's define end################################
 

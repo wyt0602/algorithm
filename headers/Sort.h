@@ -13,5 +13,6 @@ typedef int DATA_TYPE;
 
 int heap_sort(DATA_TYPE array[], int array_size);
 int quick_sort(DATA_TYPE array[], int array_size);
+int merge_sort(DATA_TYPE array[], int array_size);
 
 #endif
