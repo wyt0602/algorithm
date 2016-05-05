@@ -32,6 +32,9 @@ static int split_sort(DATA_TYPE *src, DATA_TYPE *des, int array_size, int width)
 
     do {
 	
+	/*
+	 * limit the range <= array_size
+	 */ 
 	l_end = l_end > array_size ? array_size : l_end;
 	r_end = r_end > array_size ? array_size : r_end;
 
