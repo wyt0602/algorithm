@@ -12,18 +12,21 @@
 typedef int DATA_TYPE;
 
 typedef struct LinkedNode{
+    int visit;
     DATA_TYPE value;
     struct LinkedNode *next;
 }LinkedNode;
 
-#define SORTED_UNIQUE         0x0001
-#define SORTED_NON_UNIQUE     0x0010
-#define UNIQUE_NON_SORTED     0x0100
-#define NON_UNIQUE_NON_SORTED 0x1000
+#define SORTED_UNIQUE         1
+#define SORTED_NON_UNIQUE     2
+#define UNIQUE_NON_SORTED     3
+#define NON_UNIQUE_NON_SORTED 4
+#define LOOP                  5 
 
 typedef unsigned int LIST_TYPE;
 
-LinkedNode* get_list(int size, LIST_TYPE type);
+void print_list(LinkedNode *list);
+LinkedNode* get_list(int size, int scale, LIST_TYPE type);
 LinkedNode* merge_sort(LinkedNode *list);
 
 #endif

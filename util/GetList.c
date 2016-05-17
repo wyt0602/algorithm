@@ -12,11 +12,10 @@
 
 #include "GetList.h"
 
-#define SCALE 5
+static int mod = 0;
 
 static LinkedNode* unique(int size)
 {
-    int mod = SCALE * size;
     char *flag = malloc(mod);
     if (flag == NULL)
 	return NULL;
@@ -35,6 +34,7 @@ static LinkedNode* unique(int size)
 	    printf("malloc error!\n");
 	    return NULL;
 	}
+	node->visit = 0;
 	node->value = temp;
 	node->next = NULL;
 
@@ -52,7 +52,6 @@ static LinkedNode* unique(int size)
 
 static LinkedNode* non_unique(int size)
 {
-    int mod = size;
     LinkedNode *head = NULL;
     LinkedNode *rear = NULL;
 
@@ -65,6 +64,7 @@ static LinkedNode* non_unique(int size)
 	    printf("malloc error!\n");
 	    return NULL;
 	}
+	node->visit = 0;
 	node->value = temp;
 	node->next = NULL;
 
@@ -80,10 +80,45 @@ static LinkedNode* non_unique(int size)
     return head;
 }
 
-LinkedNode* get_list(int size, LIST_TYPE type)
+static LinkedNode* loop(int size, LIST_TYPE type)
+{
+    int loop_start = random()%size;
+
+    LinkedNode *list = NULL;
+
+    if (type == LOOP)
+	list = unique(size);
+
+    if (list == NULL)
+	return NULL;
+
+    int i = 0;
+    LinkedNode *loop_node = NULL;
+    LinkedNode *temp = list;
+    LinkedNode *pre = NULL;
+
+    while (temp){
+	if (i == loop_start)
+	    loop_node = temp;
+	i++;
+	pre = temp;
+	temp = temp->next;
+    }
+
+    printf("loop_start:%d->%d\n", loop_start+1, loop_node->value);
+    pre->next = loop_node;
+
+    return list;
+}
+
+LinkedNode* get_list(int size, int scale, LIST_TYPE type)
 {
     if (size <= 0)
 	return NULL;
+
+    if (scale <= 0)
+	mod = size;
+    mod = scale;
 
     LinkedNode *list = NULL;
 
@@ -97,30 +132,54 @@ LinkedNode* get_list(int size, LIST_TYPE type)
 	list = unique(size);
     else if (type == NON_UNIQUE_NON_SORTED)
 	list = non_unique(size);
+    else if (type == LOOP)
+	list = loop(size, type);
     else
 	return NULL;
 
     return list;
 }
 
-/*
-int main()
+void print_list(LinkedNode *list)
 {
-    LinkedNode *list1 = get_list(66, SORTED_UNIQUE);
-    LinkedNode *list2 = get_list(66, SORTED_NON_UNIQUE);
+    if (list == NULL)
+	return;
 
-    while (list1){
-	printf("%d ", list1->value);
-	list1 = list1->next;
+    int count = 0;
+
+    while (list){
+	if (list->visit == 2)
+	    break;
+
+	if (count%6 == 0 && count != 0)
+	    printf("\n");
+	printf("%8d", list->value);
+	list->visit++;
+	list = list->next;
+	count++;
     }
-
     printf("\n");
+}
 
-    while (list2){
-	printf("%d ", list2->value);
-	list2 = list2->next;
-    }
-    printf("\n");
+/*
+   int main()
+   {
+   LinkedNode *list1 = get_list(66, SORTED_UNIQUE);
+   LinkedNode *list2 = get_list(66, SORTED_NON_UNIQUE);
 
-    return 0;
-}*/
+   while (list1){
+   printf("%d ", list1->value);
+   list1 = list1->next;
+   }
+
+   printf("\n");
+
+   while (list2){
+   printf("%d ", list2->value);
+   list2 = list2->next;
+   }
+   printf("\n");
+
+   return 0;
+   }
+   */
