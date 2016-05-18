@@ -16,6 +16,9 @@ static int mod = 0;
 
 static LinkedNode* unique(int size)
 {
+    if (mod < size)
+	mod = size;
+
     char *flag = malloc(mod);
     if (flag == NULL)
 	return NULL;
