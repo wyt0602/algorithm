@@ -3,254 +3,208 @@
  * @Brief  Stack implementation
  * @author wu yangtao , w_y_tao@163.com
  * @version version 1.0
- * @date 2016-03-29
+ * @date 2016-05-20
  */
 
 #include <stdlib.h>
-
+#include <string.h>
 #include "Stack.h"
-#include "Log.h"
+
+#define MIN
+#define BLOCK_SIZE 64
+#define IS_FULL(block) ((block)->top == (block)->size)
+#define IS_EMPTY(block) ((block)->top == 0)
 
 
 /* --------------------------------------------------------------------------*/
 /**
- * @Brief  stack_new Initial stack struct
+ * @Brief  increase_block Add a new block to the block list
  *
- * @Param stack Stack struct
- * @Param size Stack size, if size=0, select default(10);or size is just size
+ * @Param stack
  *
- * @Returns   0 is OK; other is failed
+ * @Returns   true is OK
  */
 /* ----------------------------------------------------------------------------*/
-int stack_new(Stack *stack, unsigned int size)
+
+static bool increase_block(Stack *stack)
 {
-    /**
-     * set default size 10
-     */
-    if (size == 0)
-	size = 10;
-    if (stack == NULL){
-	ERROR("null pointer!");
-	return -1;
-    }
+    Block *block = (Block*)malloc(sizeof(Block));
+    if (block == NULL)
+	return false;
+    block->size = BLOCK_SIZE;
+    block->top = 0;
 
-    /**
-     * initial stack
-     */
-    stack->start_address = (void**)malloc(size*sizeof(void*));
-    if (stack->start_address == NULL){
-	ERROR("malloc error!");
-	return -1;
+    STACK_DATA_TYPE *mem = (STACK_DATA_TYPE*)malloc(sizeof(STACK_DATA_TYPE)*BLOCK_SIZE);
+    if (mem == NULL){
+	free(block);
+	return false;
     }
-    stack->size = size;
-    stack->top = 0;
+    memset(mem, 0, sizeof(STACK_DATA_TYPE)*BLOCK_SIZE);
+    block->start = mem;
 
-    return 0;
+    block->next = stack->block_list;
+    stack->block_list = block;
+
+    return true;
 }
 
 
 /* --------------------------------------------------------------------------*/
 /**
- * @Brief  stack_clear Clear the stack
+ * @Brief  decrease_block  delete a empty block from the block list
  *
- * @Param stack Stack struct
- * @Param destroy_data The function that handles the data, like freeing memory
- *
- * @Returns   -1 is failed; >=0 is the number of data element
+ * @Param stack
  */
 /* ----------------------------------------------------------------------------*/
-int stack_clear(Stack *stack, handle_destroy destroy_data)
+static void decrease_block(Stack *stack)
 {
-    if (stack == NULL){
-	ERROR("null pointer!");
-	return -1;
-    }
+    Block *temp = stack->block_list;
+    stack->block_list = temp->next;
 
-    int i;
-    if (destroy_data != NULL)
-	for (i=0; i<stack->top; i++)
-	    destroy_data(stack->start_address[i]);
-
-    int ret = stack->top;
-    stack->top = 0;
-    return ret;
+    free(temp->start);
+    free(temp);
 }
 
 
 /* --------------------------------------------------------------------------*/
 /**
- * @Brief  stack_delete Delete the stack
+ * @Brief  insert_into_min_list Insert a min node into the min list
  *
- * @Param stack Stack struct
+ * @Param stack Stack handler
+ * @Param item The item needed to be inserted
  *
- * @Returns   -1 is failed; >=0 is the number of data element
+ * @Returns   
  */
 /* ----------------------------------------------------------------------------*/
-int stack_delete(Stack *stack, handle_destroy destroy_data)
+static bool insert_into_min_list(Stack *stack, STACK_DATA_TYPE item)
 {
-    if (stack == NULL){
-	ERROR("null pointer!");
-	return -1;
+    MinNode *node = NULL;
+
+    if (stack->min_list == NULL){
+	node = (MinNode*)malloc(sizeof(MinNode));
+	if (node == NULL)
+	    return false;
+	node->value = item;
+	node->next = NULL;
+	stack->min_list = node;
+    } else {
+	if (item > stack->min_list->value)
+	    return true;
+
+	node = (MinNode*)malloc(sizeof(MinNode));
+	if (node == NULL)
+	    return false;
+	node->value = item;
+	node->next = stack->min_list;
+	stack->min_list = node;
     }
 
-    int ret = stack_clear(stack, destroy_data);
-    free(stack->start_address);
-    stack->start_address = NULL;
-    stack->size = 0;
-    stack->top = 0;
-
-    return ret;
+    return true;
 }
 
-
-/* --------------------------------------------------------------------------*/
-/**
- * @Brief  stack_enlarge Enlarge the stack by calling realloc
- *
- * @Param stack Stack struct
- * @Param size The aimed size
- *
- * @Returns   -1 is failed; other is the size of stack
- */
-/* ----------------------------------------------------------------------------*/
-int stack_enlarge(Stack *stack, unsigned int size)
+static void delete_from_min_list(Stack *stack)
 {
-    if (stack == NULL){
-	ERROR("null pointer!");
-	return -1;
-    }
+    MinNode *temp = stack->min_list;
+    stack->min_list = temp->next;
+    free(temp);
+}
 
-    /**
-     * if size = 0, it means enlarging the stack twice than old
-     * if size <= stack->size, it means no change
+static bool push(Stack *stack, STACK_DATA_TYPE item)
+{
+    if (stack == NULL)
+	return false;
+
+    /*
+     * current block is full
      */ 
-    unsigned int new_size = 0;
-    if (size == 0)
-	new_size = stack->size * 2;
-    else if (size > stack->size)
-	new_size = size;
-    else
-	new_size = stack->size;
+    if (IS_FULL(stack->block_list))
+	if (increase_block(stack) == false)
+	    return false;
 
-    void **temp;
-    if (new_size > stack->size){
-	temp = (void**)realloc(stack->start_address, new_size*sizeof(void*));
-	if (temp == NULL)
-	{
-	    ERROR("realloc error!");
-	    return -1;
-	}
-	stack->start_address = temp;
-	stack->size = new_size;
-    }
+    Block *block = stack->block_list;
+    (block->start)[block->top++] = item;
 
-    return new_size;
+#ifdef MIN
+    if (insert_into_min_list(stack, item) == false)
+	return false;
+#endif
+
+    return true;
 }
 
 
-/* --------------------------------------------------------------------------*/
-/**
- * @Brief  stack_decrease Decrease the stack
- *
- * @Param stack Stack struct
- * @Param size The aimed size
- *
- * @Returns  -1 is failed; other is the size of stack 
- */
-/* ----------------------------------------------------------------------------*/
-int stack_decrease(Stack *stack, unsigned int size)
+static bool pop(Stack *stack, STACK_DATA_TYPE *result)
 {
-    if (stack == NULL){
-	ERROR("null pointer!");
-	return -1;
-    }
+    if (stack == NULL)
+	return false;
 
-    /**
-     * if size >= stack size, will not change the size;
-     * if stack->top < size < stack->size, will set new size
-     * if size <= stack->top, will change the size to the stack->top
-     */ 
-    unsigned int new_size = 0;
-    if (size >= stack->size)
-	new_size = stack->size;
-    else if (size > stack->top)
-	new_size = size;
-    else
-	new_size = stack->top;
+    Block *block = stack->block_list;
 
-    void **temp;
-    if (new_size < stack->size){
-	temp = (void**)realloc(stack->start_address, new_size*sizeof(void*));
-	if (temp == NULL)
-	{
-	    ERROR("realloc error!");
-	    return -1;
-	}
-	stack->start_address = temp;
-	stack->size = new_size;
-    }
+    if (IS_EMPTY(block))
+	return false;
 
-    return new_size;
+    *result = (block->start)[--block->top];
+
+#ifdef MIN
+    if (*result == stack->min_list->value)
+	delete_from_min_list(stack);
+#endif
+
+    if (IS_EMPTY(block) && stack->origin_block != block)
+	decrease_block(stack);
+
+    return true;
 }
 
-
-/* --------------------------------------------------------------------------*/
-/**
- * @Brief  stack_push Push element to stack
- *
- * @Param stack Stack struct
- * @Param element The element that needs to be pushed into the stack
- *
- * @Returns   0 is OK; -1 is failed
- */
-/* ----------------------------------------------------------------------------*/
-int stack_push(Stack *stack, void *element)
+static bool peek(Stack *stack, STACK_DATA_TYPE *result)
 {
-    if (stack == NULL || element == NULL){
-	ERROR("null pointer!");
-	return -1;
-    }
+    if (stack == NULL)
+	return false;
 
-    /**
-     * if the stack is not full, put element into the stack directly
-     * or enlarge the stack, then push the element
-     */ 
-    if (STACK_FULL(stack)){
-	if (stack_enlarge(stack, 0) == -1)
-	    return -1;
-    }
-    stack->start_address[stack->top] = element;
-    stack->top++;
+    Block *block = stack->block_list;
+    if (IS_EMPTY(block))
+	return false;
 
-    return 0;
+    *result = (block->start)[block->top - 1];
+
+    return true;
 }
 
-
-/* --------------------------------------------------------------------------*/
-/**
- * @Brief  stack_pop Pop an element
- *
- * @Param stack Stack struct
- *
- * @Returns   NULL is failed; other is the address of the element
- */
-/* ----------------------------------------------------------------------------*/
-void* stack_pop(Stack *stack)
+static bool min(Stack *stack, STACK_DATA_TYPE *result)
 {
-    if (stack == NULL){
-	ERROR("null pointer!");
-	return NULL;
-    }
+    if (stack == NULL)
+	return false;
 
-    void *ret =NULL;
-    if (STACK_EMPTY(stack))
-    {
-	INFO("stack is empty!");
-	return ret;
-    }else{
-	ret = stack->start_address[stack->top-1];
-	stack->top--;
-    }
+    if (stack->min_list == NULL)
+	return false;
 
-    return ret;
+    *result = stack->min_list->value;
+
+    return true;
+}
+
+static bool is_empty(Stack *stack)
+{
+    if (stack == NULL)
+	return false;
+
+    Block *block = stack->block_list;
+    if (IS_EMPTY(block))
+	return true;
+
+    return false;
+}
+
+void stack_init(Stack *stack)
+{
+    if (increase_block(stack) == false)
+	return;
+
+    stack->origin_block = stack->block_list;
+    stack->min_list = NULL;
+    stack->push = push;
+    stack->pop = pop;
+    stack->peek = peek;
+    stack->min = min;
+    stack->is_empty = is_empty;
 }

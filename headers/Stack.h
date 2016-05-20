@@ -1,49 +1,47 @@
 /**
  * @file Stack.h
- * @Brief  Stack interfaces
+ * @Brief  Stack interface
  * @author wu yangtao , w_y_tao@163.com
  * @version version 1.0
- * @date 2016-03-29
+ * @date 2016-05-20
  */
 
 #ifndef STACK_H_
 #define STACK_H_
 
-typedef struct Stack{
-    /**
-     * stack array's start address
-     */
-    void **start_address;
-    /**
-     * stack's size
-     */
+typedef void* STACK_DATA_TYPE;
+
+typedef enum{
+    false = 0,
+    true
+}bool;
+
+typedef struct Block{
     unsigned int size;
-    /**
-     * top of the stack
-     */
     unsigned int top;
+    struct Block *next;
+    STACK_DATA_TYPE *start;
+}Block;
+
+typedef struct MinNode{
+    STACK_DATA_TYPE value;
+    struct MinNode *next;
+}MinNode;
+
+typedef struct Stack{
+    Block *origin_block; //point to the first block
+    MinNode *min_list;
+    Block *block_list;
+
+    //stack handle begin
+    bool (*push)(struct Stack *stack, STACK_DATA_TYPE item);
+    bool (*pop)(struct Stack *stack, STACK_DATA_TYPE *result);
+    bool (*peek)(struct Stack *stack, STACK_DATA_TYPE *result);
+    bool (*min)(struct Stack *stack, STACK_DATA_TYPE *result);
+    bool (*is_empty)(struct Stack *stack);
+    //stack handle end
 }Stack;
 
-#define STACK_EMPTY(stack) ((stack->top) == 0)
-#define STACK_FULL(stack) ((stack->top) == (stack->size))
-#define STACK_TOP(stack) ((stack->start_address)[stack->top-1])
-
-typedef void (*handle_destroy)(void *element);
-
-int stack_new(Stack *stack, unsigned int size);
-int stack_delete(Stack *stack, handle_destroy destroy_data);
-int stack_clear(Stack *stack, handle_destroy destroy_data);
-
-int stack_enlarge(Stack *stack, unsigned int size);
-int stack_decrease(Stack *stack, unsigned int size);
-
-int stack_push(Stack *stack, void *element);
-void* stack_pop(Stack *stack);
-
-#define STACK_NULL {\
-    .start_address = NULL, \
-    .size = 0, \
-    .top = 0 \
-}
+void stack_init(Stack *stack);
 
 #endif

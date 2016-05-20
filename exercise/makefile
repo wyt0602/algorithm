@@ -1,10 +1,10 @@
 file=exer$(n).c
 index=-$(n)-
 
-file_list=-8- -9- -10- -11- -12-
+file_list=-8- -9- -10- -11- -12- -14-
 flag_list=$(findstring $(index),$(file_list))
 
-file_stack=-13-
+file_stack=-13- -16-
 flag_stack=$(findstring $(index),$(file_stack))
 
 choice=

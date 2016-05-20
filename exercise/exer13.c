@@ -53,11 +53,6 @@
 #include "GetList.h"
 #include "Stack.h"
 
-typedef enum{
-    false,
-    true
-}bool;
-
 bool is_palindrom(LinkedNode *list)
 {
     if (list == NULL)
@@ -66,13 +61,12 @@ bool is_palindrom(LinkedNode *list)
     LinkedNode *front = list;
     LinkedNode *back = list;
 
-    Stack s = STACK_NULL;
-    Stack *stack = &s;
-    stack_new(stack, 100);
+    Stack stack; 
+    stack_init(&stack);
 
     //important
     while (front != NULL && front->next != NULL){
-	stack_push(stack, back);
+	stack.push(&stack, back);
 	back = back->next;
 	front = front->next->next;
     }
@@ -80,24 +74,23 @@ bool is_palindrom(LinkedNode *list)
     if (front != NULL)
 	back = back->next;
 
-    while (!STACK_EMPTY(stack)){
-	LinkedNode *temp = (LinkedNode*)stack_pop(stack);
+    while (!stack.is_empty(&stack)){
+	LinkedNode *temp;
+	stack.pop(&stack,(void*)(&temp));
 	if (temp->value != back->value){
-	    stack_delete(stack, 0);
 	    return false;
 	}
 	back = back->next;
     }
 
-    stack_delete(stack, 0);
     return true;
 }
 
 
 int main()
 {
-    LinkedNode *list1 = get_list(23, 500, UNIQUE_NON_SORTED);
-    LinkedNode *list2 = get_list(23, 500, UNIQUE_NON_SORTED);
+    LinkedNode *list1 = get_list(100, 500, UNIQUE_NON_SORTED);
+    LinkedNode *list2 = get_list(100, 500, UNIQUE_NON_SORTED);
 
     if (!(list1 && list2))
 	return 0;
