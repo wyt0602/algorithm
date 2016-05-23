@@ -186,7 +186,7 @@ static bool min(Stack *stack, STACK_DATA_TYPE *result)
 static bool is_empty(Stack *stack)
 {
     if (stack == NULL)
-	return false;
+	return true;
 
     Block *block = stack->block_list;
     if (IS_EMPTY(block))
@@ -195,10 +195,13 @@ static bool is_empty(Stack *stack)
     return false;
 }
 
-void stack_init(Stack *stack)
+bool stack_init(Stack *stack)
 {
+    if (stack == NULL)
+	return false;
+
     if (increase_block(stack) == false)
-	return;
+	return false;
 
     stack->origin_block = stack->block_list;
     stack->min_list = NULL;
@@ -207,4 +210,13 @@ void stack_init(Stack *stack)
     stack->peek = peek;
     stack->min = min;
     stack->is_empty = is_empty;
+
+    return true;
+}
+
+void stack_delete(Stack *stack)
+{
+    if (stack == NULL)
+	return;
+    decrease_block(stack);
 }

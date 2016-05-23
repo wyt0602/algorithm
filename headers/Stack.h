@@ -42,6 +42,7 @@ typedef struct Stack{
     //stack handle end
 }Stack;
 
-void stack_init(Stack *stack);
+bool stack_init(Stack *stack);
+void stack_delete(Stack *stack);
 
 #endif
