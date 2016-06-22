@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <deque>
 
 #include "util/BinarySearch.h"
 
@@ -31,7 +32,7 @@ bool isIn2(std::vector<int>::const_iterator low, std::vector<int>::const_iterato
 int main()
 {
     //int array[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    std::vector<float> a = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
+    std::deque<float> a = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
 
     int i = 0;
     while (i < 20){

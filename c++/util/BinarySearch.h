@@ -6,6 +6,9 @@
  * @date 2016-06-21
  */
 
+#ifndef IS_IN_H_
+#define IS_IN_H_
+
 template <typename T>
 bool isIn(T low, T high, typename T::value_type value)
 {
@@ -22,3 +25,5 @@ bool isIn(T low, T high, typename T::value_type value)
 
     return false;
 }
+
+#endif
