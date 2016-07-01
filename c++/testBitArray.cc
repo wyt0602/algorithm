@@ -4,7 +4,7 @@
 
 int main()
 {
-    BitArray bit_set = BitArray(1000000000);
+    BitArray bit_set = BitArray(100);
     bit_set.fill(34, 37, true);
     bit_set.set(11, true);
     bit_set.set(42, true);

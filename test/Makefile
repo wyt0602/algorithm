@@ -34,6 +34,12 @@ QuickSort:QuickSort.o test_quick.o GetArray.o
 MergeSort:MergeSort.o test_merge.o GetArray.o
 	$(CC) $(CFLAGS) -o merge_test $^
 
+InsertionSort:InsertionSort.o test_insertion.o GetArray.o
+	$(CC) $(CFLAGS) -o insertion_test $^
+
+NthElement:NthElement.o InsertionSort.o test_nth.o ArrayNew.o HeapSort.o
+	$(CC) $(CFLAGS) -o nth_test $^
+
 #######################user's define end################################
 
 #include dependency file
