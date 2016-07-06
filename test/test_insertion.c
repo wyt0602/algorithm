@@ -10,7 +10,7 @@
 #include "Sort.h"
 #include "GetArray.h"
 
-#define ARRAY_SIZE 100
+#define ARRAY_SIZE 1000
 #define RAND_FILE "rand.txt"
 #define RESULT_FILE "result.txt"
 

@@ -5,11 +5,11 @@
 #include "Sort.h"
 #include "ArrayNew.h"
 
-#define SIZE 131
+#define SIZE 173
 
 int main()
 {
-    int position = 37;
+    int position = 73;
     int *array = get_array(SIZE, 900, NON_SORTED_UNIQUE);
     int *array_backup = malloc(SIZE * sizeof(int));
     if (array == NULL || array_backup == NULL)

@@ -1,5 +1,5 @@
 /**
- * @file BitArray.cc
+ * @file BitArray.h
  * @Brief  Bit array implementation
  * @author wu yangtao , w_y_tao@163.com
  * @version version 1.0
@@ -32,7 +32,7 @@ class BitArray
     private:
 	char *start;
 	int end;
-	int size;
+	int size;  //byte number
 };
 
 BitArray::BitArray(int bit_size, bool value)
@@ -58,7 +58,7 @@ BitArray::BitArray(int bit_size, bool value)
 /* ----------------------------------------------------------------------------*/
 inline int BitArray::get(int position)
 {
-    if (position < 0 || position > end)
+    if (position <= 0 || position > end)
 	return -1;
 
     int byte_index = (position - 1) / 8;
@@ -70,29 +70,43 @@ inline int BitArray::get(int position)
 int BitArray::getFirstNonZero()
 {
     unsigned int *p = (unsigned int*)start;
-    int index = 4;
+    int index = 0;
+    int count = size / 4;
 
-    while (index <= size){
-	if (*p){
-	    index -= 4;
+    //check by four bytes
+    while (count){
+	if (*p)
 	    break;
-	}
 	++p;
 	index += 4;
+	--count;
     }
 
-    char *start_pos = start + index;
+    if (index == size)
+	return 0;
+
+    char *start_pos = start + index; //means the start position of next four bytes
     int i = 0;
-    for (; i < 3; ++i){
-	if (*(start_pos+i))
+    //check by byte;
+    //two sitituation:
+    //(1)four bytes remained
+    //(2)less than four bytes remained  : -> index+1 == size
+    while (i < 3){
+	if (index+1 == size || *start_pos) //index+1 means from start to current position
 	    break;
+	++i;
+	++start_pos;
 	++index;
     }
 
+    //check by bit
     char goal = *(start + index);
-    for (i =0; i < 8; ++i)
+    for (i = 0; i < 8; ++i){
 	if ((goal >> i) & 0x1)
 	    break;
+	if (index*8+i+1 == end || i == 8)
+	    return 0;
+    }
 
     return index*8+i+1;
 }
@@ -100,7 +114,7 @@ int BitArray::getFirstNonZero()
 
 inline bool BitArray::set(int position, bool value)
 {
-    if (position < 0 || position > end)
+    if (position <= 0 || position > end)
 	return false;
 
     int byte_index = (position - 1) / 8;
@@ -116,7 +130,7 @@ inline bool BitArray::set(int position, bool value)
 
 bool BitArray::fill(int from, int to, bool value)
 {
-    if ((from && to) < 0 || from > to || to > end)
+    if ((from && to) <= 0 || from > to || to > end)
 	return false;
 
     //situation 1, no complete byte

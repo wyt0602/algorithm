@@ -55,6 +55,17 @@ D_TYPE* patition(D_TYPE* first, D_TYPE* last, D_TYPE pivot)
 }
 
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @Brief  nth_element Get the nth element from the given sequence
+ *
+ * @Param first 
+ * @Param last
+ * @Param nth nth from 0; nth = 1, means 0, 1
+ *
+ * @Returns   
+ */
+/* ----------------------------------------------------------------------------*/
 D_TYPE* nth_element(D_TYPE* first, D_TYPE* last, int nth)
 {
     if (!(first && last))

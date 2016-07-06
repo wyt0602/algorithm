@@ -15,11 +15,9 @@ void insert(DATA_TYPE* first, DATA_TYPE* last)
     DATA_TYPE *pre = last - 1;
     DATA_TYPE value = *last;
 
-    while (value < *pre){
-	*last = *pre;
-	--last;
-	--pre;
-    }
+    while (value < *pre)
+	*last-- = *pre--;
+
     *last = value;
 }
 
