@@ -4,9 +4,9 @@
 
 int main()
 {
-    BitArray bit_set = BitArray(63, true);
-    bit_set.fill(1, 63, false);
-    //bit_set.set(63, true);
+    BitArray bit_set = BitArray(65, true);
+    bit_set.fill(1, 64, false);
+    bit_set.set(65, true);
 
    // bit_set.setAll(true);
     int value = bit_set.getFirstNonZero();

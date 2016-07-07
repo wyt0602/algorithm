@@ -1,0 +1,1 @@
+g++ -o test test*.cc -L./util -std=c++11

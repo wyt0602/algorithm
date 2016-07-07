@@ -69,16 +69,16 @@ inline int BitArray::get(int position)
 
 int BitArray::getFirstNonZero()
 {
-    unsigned int *p = (unsigned int*)start;
+    unsigned long long *p = (unsigned long long*)start;
     int index = 0;
-    int count = size / 4;
+    int count = size / sizeof(unsigned long long);
 
     //check by four bytes
     while (count){
 	if (*p)
 	    break;
 	++p;
-	index += 4;
+	index += sizeof(unsigned long long);
 	--count;
     }
 
@@ -91,7 +91,7 @@ int BitArray::getFirstNonZero()
     //two sitituation:
     //(1)four bytes remained
     //(2)less than four bytes remained  : -> index+1 == size
-    while (i < 3){
+    while (i < sizeof(unsigned long long) - 1){
 	if (index+1 == size || *start_pos) //index+1 means from start to current position
 	    break;
 	++i;
