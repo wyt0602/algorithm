@@ -16,7 +16,7 @@ class Prime{
     public:
 	Prime() {result = std::make_shared<std::vector<int>>();}
 	bool isPrime(int number);
-	std::shared_ptr<std::vector<int>> getPrime(int to)
+	std::shared_ptr<std::vector<int>>& getPrime(int to)
 	{
 	    buildPrimeArray(to);
 	    return result;

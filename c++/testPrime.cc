@@ -16,13 +16,11 @@ class Print
 	}
 
     private:
-	static int format;
+	int format = 0;
 };
-int Print::format = 0;
 
 int main()
 {
-    std::shared_ptr<std::vector<int>> result;
     Prime prime;
 
     /*
@@ -33,7 +31,7 @@ int main()
 
     */
     
-    result = prime.getPrime(7246525);
+    std::shared_ptr<std::vector<int>> &result = prime.getPrime(7246525);
     std::vector<int>::iterator begin = result->begin();
     std::vector<int>::iterator end = result->end();
 
