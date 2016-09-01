@@ -19,4 +19,6 @@ int* search_n(int *first, int *last, int count, int value);
 
 void swap(int *a, int *b);
 
+int* unique(int *first, int *last);
+
 #endif

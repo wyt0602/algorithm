@@ -47,7 +47,7 @@ int replace_space(char *str)
 
 int main()
 {
-    char str[50] = " Mr John Smith ";
+    char str[50] = " ";
     printf("input:%s\n", str);
 
     int count = replace_space(str);

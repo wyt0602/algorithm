@@ -12,7 +12,7 @@
 #include "Sort.h"
 #include "ArrayNew.h"
 
-int unique(int *array, int size, int scale)
+static int unique(int *array, int size, int scale)
 {
     char *flag = malloc(scale);
     if (flag == NULL)
@@ -32,7 +32,7 @@ int unique(int *array, int size, int scale)
     return 0;
 }
 
-int non_unique(int *array, int size, int scale)
+static int non_unique(int *array, int size, int scale)
 {
     int index = 0;
     while (index < size){

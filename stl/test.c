@@ -47,6 +47,13 @@ int main()
     else
 	printf("not find\n");
 
+    //test unique
+    int *arr3 = get_array(20, 10, SORTED_NON_UNIQUE);
+    print_array(arr3, 20);
+
+    result = unique(arr3, arr3+20);
+    print_array(arr3, result-arr3);
+    print_array(result, arr3+20-result);
 
     return 0;
 }

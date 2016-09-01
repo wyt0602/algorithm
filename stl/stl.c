@@ -162,3 +162,19 @@ inline void swap(int *a, int *b)
     *a = *b;
     *b = temp;
 }
+
+int* unique(int *first, int *last)
+{
+    assert(first <= last);
+
+    first = adjacent_find(first, last);
+    int *runner = first;
+
+    while (runner != last){
+	if (*first == *runner)
+	    ++runner;
+	else
+	    *(++first) = *runner;
+    }
+    return ++first;
+}
